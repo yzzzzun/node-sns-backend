@@ -4,7 +4,7 @@
   "description": "node-sns backend with express",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,11 @@
   "dependencies": {
     "express": "^4.17.1",
     "mariadb": "^2.4.2",
-    "sequelize": "^6.3.3",
+    "mysql2": "^2.1.0",
+    "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }

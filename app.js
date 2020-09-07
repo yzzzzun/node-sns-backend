@@ -1,7 +1,16 @@
 //내부적으로 http를 사용함
 const express = require("express");
 const postRouter = require("./routes/posts");
+const db = require("./models");
+
 const app = express();
+
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("DB 연결 성공");
+  })
+  .catch(console.error);
 
 /** 
  const http = require("http");

@@ -12,10 +12,12 @@ router.get("/", (req, res) => {
   ]);
 });
 
+// POST - /posts
 router.post("/", (req, res) => {
   res.send({ id: 3, content: "hello" });
 });
 
+// DELETE - /posts
 router.delete("/", (req, res) => {
   //TODO
 });
