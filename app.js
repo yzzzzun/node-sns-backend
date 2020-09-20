@@ -1,10 +1,18 @@
 //내부적으로 http를 사용함
 const express = require("express");
-const postRouter = require("./routes/posts");
+const postRouter = require("./routes/post");
+const userRouter = require("./routes/user");
+const session = require("express-session");
+const passport = require("passport");
+const cookieParser = require("cookie-parser");
 const db = require("./models");
+const passportConfig = require("./passport");
+const cors = require("cors");
+const dotenv = require('dotenv');
 
+dotenv.config();
 const app = express();
-
+passportConfig();
 db.sequelize
   .sync()
   .then(() => {
@@ -47,11 +55,42 @@ const server = http.createServer((req, res) => {
 //app.patch -> 부분수정
 //app.options -> 확인, 요청보낼수있는지?
 //app.head -> 헤더만 가져오기(header/body 중 header)
+
+//모든 요청에 CORS 설정
+app.use(
+  cors({
+    origin: "*",
+    credentials: false, //기본값 false
+  })
+);
+//라우터들 보다 위에있어야함, 위에서부터 실행되기때문, 라우터보다 아래있다면 req.body 에서 인식 할 수 없음
+//POST data req.body 에서 받을 수 있도록 설정
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// session 설정
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(
+  session({
+    saveUninitialized: false,
+    resave: false,
+    secret : process.env.COOKIE_SECRET  //쿠키생성에 사용하는 키
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get("/", (req, res) => {
   res.send("hello express");
 });
 
 app.use("/posts", postRouter);
+app.use("/users", userRouter);
+
+//에러처리 미들웨어는 내부적으로 존재하고있음
+// app.use((err,req,res,next) => {
+// 재정의가 가능함
+// });
+
 
 app.listen(3065, () => {
   console.log("server run : 3065");
