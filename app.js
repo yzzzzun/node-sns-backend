@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const db = require("./models");
 const passportConfig = require("./passport");
 const cors = require("cors");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
 dotenv.config();
 const app = express();
@@ -59,8 +59,8 @@ const server = http.createServer((req, res) => {
 //모든 요청에 CORS 설정
 app.use(
   cors({
-    origin: "*",
-    credentials: false, //기본값 false
+    origin: "http://localhost:3000",
+    credentials: true, //기본값 false, true로 해줘야 도메인이 달라도 쿠키가 전달됨
   })
 );
 //라우터들 보다 위에있어야함, 위에서부터 실행되기때문, 라우터보다 아래있다면 req.body 에서 인식 할 수 없음
@@ -73,7 +73,7 @@ app.use(
   session({
     saveUninitialized: false,
     resave: false,
-    secret : process.env.COOKIE_SECRET  //쿠키생성에 사용하는 키
+    secret: process.env.COOKIE_SECRET, //쿠키생성에 사용하는 키
   })
 );
 app.use(passport.initialize());
@@ -90,7 +90,6 @@ app.use("/users", userRouter);
 // app.use((err,req,res,next) => {
 // 재정의가 가능함
 // });
-
 
 app.listen(3065, () => {
   console.log("server run : 3065");
